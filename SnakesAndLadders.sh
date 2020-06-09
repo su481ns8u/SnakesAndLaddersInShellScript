@@ -10,9 +10,10 @@ LADDER=2;
 SNAKE=3;
 
 position=$START_POS
-
+noOfDieRolls=0
 function diceRoll(){
 	roll=$(($((RANDOM%6))+1))
+	noOfDieRolls=$(($noOfDieRolls+1))
 	echo "Roll Result by player $1: "$roll
 }
 
@@ -48,3 +49,4 @@ while [ $position -lt 100 ]
 do
 	play 1
 done
+echo "Total Number of die rolls: "$noOfDieRolls
