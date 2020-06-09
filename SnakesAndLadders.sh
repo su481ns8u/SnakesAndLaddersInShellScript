@@ -2,14 +2,14 @@
 
 echo "Welcome to the snakes /\_/^ and ladders |-|"
 
-START_POS=0;
+START_POS=0
 declare -a players
-NO_PLAY=1;
-LADDER=2;
-SNAKE=3;
+NO_PLAY=1
+LADDER=2
+SNAKE=3
 
 read -p 'Enter number of players: ' noOfPlayers
-for((i=0; i<$noOfPlayers; i++))
+for((i=1; i<=$noOfPlayers; i++))
 do
 	players[$i]=0
 done
@@ -26,17 +26,20 @@ function play(){
 	diceRoll $key
 	case $choice in
 		$NO_PLAY)
-			echo "Player $key Dont Move from "${players[$key]}" !"
+			echo "Dont Move from "${players[$key]}" !"
 			;;
 		$LADDER)
 			temp=$((${players[$key]}+$roll))
                         if [ $temp -gt 100 ]
                         then
-                                echo "Player $key cant Move";
+                                echo "Cant Move";
                         else
                                 players[$key]=$temp
-                                echo "Player $key Got a ladder and upgraded to "${players[$key]}
-				play
+                                echo "Ladder to "${players[$key]}
+				if [ ${players[$key]} -ne 100 ]
+				then
+					play
+				fi
                         fi
                         ;;
 		$SNAKE)
@@ -45,7 +48,7 @@ function play(){
 			then
 				players[$key]=$START_POS
 			fi
-			echo "Player $key Got a snake and demoted to "${players[$key]}
+			echo "Sanke to "${players[$key]}
 			;;
 	esac
 }
@@ -55,11 +58,12 @@ while [ $flag -ne 1 ]
 do
 	for key in ${!players[@]}
 	do
+		echo " ";echo "Player" $key"s turn"
 		play
 		if [ ${players[$key]} -eq 100 ]
 		then
 			flag=1
-			echo "Player $key player wins !!!"
+			echo " ";echo "Player $key  wins !!!"
 			break
 		fi
 	done
