@@ -3,13 +3,17 @@
 echo "Welcome to the snakes /\_/^ and ladders |-|"
 
 START_POS=0;
-No_OF_PLAYERS=1;
-
+declare -a players
 NO_PLAY=1;
 LADDER=2;
 SNAKE=3;
 
-position=$START_POS
+read -p 'Enter number of players: ' noOfPlayers
+for((i=0; i<$noOfPlayers; i++))
+do
+	players[$i]=0
+done
+
 noOfDieRolls=0
 function diceRoll(){
 	roll=$(($((RANDOM%6))+1))
@@ -19,34 +23,50 @@ function diceRoll(){
 
 function play(){
 	choice=$(($((RANDOM%3))+1))
-	diceRoll $1
+	diceRoll $key
 	case $choice in
 		$NO_PLAY)
-			echo "Player $1 Dont Move from $position !"
+			echo "Player $key Dont Move from "${players[$key]}" !"
 			;;
 		$LADDER)
-			temp=$(($position+$roll))
+			temp=$((${players[$key]}+$roll))
                         if [ $temp -gt 100 ]
                         then
-                                echo "Player $1 cant Move";
+                                echo "Player $key cant Move";
                         else
-                                position=$temp
-                                echo "Player $1 Got a ladder and upgraded to $position"
+                                players[$key]=$temp
+                                echo "Player $key Got a ladder and upgraded to "${players[$key]}
+				play
                         fi
                         ;;
 		$SNAKE)
-			position=$(($position-$roll))
-			if [ $position -lt 0 ]
+			players[$key]=$((${players[$key]}-$roll))
+			if [ ${players[$key]} -lt 0 ]
 			then
-				position=$START_POS
+				players[$key]=$START_POS
 			fi
-			echo "Player $1 Got a snake and demoted to $position"
+			echo "Player $key Got a snake and demoted to "${players[$key]}
 			;;
 	esac
 }
 
-while [ $position -lt 100 ]
+flag=0
+while [ $flag -ne 1 ]
 do
-	play 1
+	for key in ${!players[@]}
+	do
+		play
+		if [ ${players[$key]} -eq 100 ]
+		then
+			flag=1
+			echo "Player $key player wins !!!"
+			break
+		fi
+	done
 done
 echo "Total Number of die rolls: "$noOfDieRolls
+echo "Current Positions of Players are "
+for key in ${!players[@]}
+do
+	echo "Player "$key": "${players[$key]}
+done
