@@ -10,6 +10,7 @@ LADDER=2;
 SNAKE=3;
 
 position=$START_POS
+
 function diceRoll(){
 	roll=$(($((RANDOM%6))+1))
 	echo "Roll Result by player $1: "$roll
@@ -23,14 +24,22 @@ function play(){
 			echo "Player $1 Dont Move from $position !"
 			;;
 		$LADDER)
-			position=$(($position+$roll))
+			temp=$(($position+$roll))
+			position=$temp
 			echo "Player $1 Got a ladder and upgraded to $position"
 			;;
 		$SNAKE)
 			position=$(($position-$roll))
+			if [ $position -lt 0 ]
+			then
+				position=$START_POS
+			fi
 			echo "Player $1 Got a snake and demoted to $position"
 			;;
 	esac
 }
 
-play 1
+while [ $position -lt 100 ]
+do
+	play 1
+done
