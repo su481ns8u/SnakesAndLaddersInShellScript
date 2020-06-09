@@ -25,9 +25,14 @@ function play(){
 			;;
 		$LADDER)
 			temp=$(($position+$roll))
-			position=$temp
-			echo "Player $1 Got a ladder and upgraded to $position"
-			;;
+                        if [ $temp -gt 100 ]
+                        then
+                                echo "Player $1 cant Move";
+                        else
+                                position=$temp
+                                echo "Player $1 Got a ladder and upgraded to $position"
+                        fi
+                        ;;
 		$SNAKE)
 			position=$(($position-$roll))
 			if [ $position -lt 0 ]
